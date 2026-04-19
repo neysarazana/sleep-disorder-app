@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import os
 
 # ================= CONFIG =================
 st.set_page_config(
@@ -29,13 +30,15 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ================= LOAD MODEL =================
-model = joblib.load('model_sleep.pkl')
-scaler = joblib.load('scaler.pkl')
-le_gender = joblib.load('le_gender.pkl')
-le_occ = joblib.load('le_occ.pkl')
-le_bmi = joblib.load('le_bmi.pkl')
-le_target = joblib.load('le_target.pkl')
+# ================= LOAD MODEL (FIX PATH) =================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model = joblib.load(os.path.join(BASE_DIR, 'model_sleep.pkl'))
+scaler = joblib.load(os.path.join(BASE_DIR, 'scaler.pkl'))
+le_gender = joblib.load(os.path.join(BASE_DIR, 'le_gender.pkl'))
+le_occ = joblib.load(os.path.join(BASE_DIR, 'le_occ.pkl'))
+le_bmi = joblib.load(os.path.join(BASE_DIR, 'le_bmi.pkl'))
+le_target = joblib.load(os.path.join(BASE_DIR, 'le_target.pkl'))
 
 # ================= HEADER =================
 st.title("💤 Prediksi Gangguan Tidur")
@@ -95,7 +98,10 @@ if st.button("🔍 Prediksi Sekarang"):
         'Diastolic_BP': dia
     }])
 
+    # scaling
     data_scaled = scaler.transform(data)
+
+    # prediksi (pakai data_scaled karena training kamu pakai scaler)
     pred = model.predict(data_scaled)[0]
     hasil = le_target.inverse_transform([pred])[0]
 
