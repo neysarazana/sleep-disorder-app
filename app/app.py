@@ -103,7 +103,17 @@ if st.button("🔍 Prediksi Sekarang"):
 
     # prediksi (pakai data_scaled karena training kamu pakai scaler)
     pred = model.predict(data_scaled)[0]
-    hasil = le_target.inverse_transform([pred])[0]
+hasil = le_target.inverse_transform([pred])[0]
+
+# ================= FIX LOGIKA BIAR MASUK AKAL =================
+if sleep_duration < 4 and stress >= 7:
+    hasil = "Insomnia"
+
+if bmi == "Obese" and sys > 140:
+    hasil = "Sleep Apnea"
+
+if quality <= 3 and stress >= 8:
+    hasil = "Insomnia"
 
     # ================= OUTPUT =================
     st.subheader("📊 Hasil Prediksi")
